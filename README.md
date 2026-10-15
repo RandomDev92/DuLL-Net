@@ -23,7 +23,7 @@
 
 ## 🏗️ Architecture
 
-![Model Architecture](./Model_Coloured.png)
+![Model Architecture](./model_coloured.png)
 
 ## 🛠️ Installation
 
