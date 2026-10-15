@@ -37,6 +37,7 @@
 | Parmas(M) | FLOPs(G) |
 | -------- | -------- |
 |0.069 | 6.40 |
+
 #### Without GT Mean Correction
 | Dataset | PSNR | SSIM |
 | ------- | -------- | -------- |
@@ -46,6 +47,7 @@
 
 #### With GT Mean Correction
 | Dataset | PSNR | SSIM |
+| ------- | -------- | -------- |
 | LOLv1   |  26.36   | 0.852 |
 | LOLv2-Real  | 29.19  |  0.887   |
 | LOLv2-Syn  | 28.58   | 0.935  |
