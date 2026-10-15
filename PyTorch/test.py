@@ -1,8 +1,11 @@
 import torch
 import torch.nn.functional as F
 from torchmetrics.functional import structural_similarity_index_measure
+from torchvision.utils import save_image
 import os
 from PIL import Image
+from dataloader import *
+from model import *
 
 
 def calculate_psnr(img1, img2, max_pixel_value=1.0, gt_mean=True):
@@ -61,19 +64,13 @@ def validate(model, dataloader, device, result_dir):
     with torch.no_grad():
         for idx, (low, high) in enumerate(dataloader):
             low, high = low.to(device), high.to(device)
-            output, output_hvi, output_yuv = model(low)
+            output = model(low)
             # output = model(low)
             output = torch.clamp(output, 0, 1)
-            output_hvi = torch.clamp(output_hvi, 0, 1)
-            output_yuv = torch.clamp(output_yuv, 0, 1)
 
             # Save the output image
             save_image(output, os.path.join(result_dir, f'result_{idx}.png'))
-            #hvi and yuv need
-            output_hvi = model.PHVIT(output_hvi)
-            output_yuv = model._rgb_to_ycbcr(output_yuv)
-            save_image(output_hvi, os.path.join(result_dir, f'result_{idx}_hvi.png'))
-            save_image(output_yuv, os.path.join(result_dir, f'result_{idx}_yuv.png'))
+
 
             # Calculate PSNR
             psnr = calculate_psnr(output, high)
@@ -89,9 +86,9 @@ def validate(model, dataloader, device, result_dir):
 
 def main():
     # Paths and device setup
-    test_low = '/content/data/lolv2-real/Test/Input'
-    test_high = '/content/data/lolv2-real/Test/GT'
-    weights_path = '/content/drive/MyDrive/Checkpoints/best_model_hvi_path.pth'
+    test_low = './dataset/LOLdataset/eval15/low'
+    test_high = './dataset/LOLdataset/eval15/high'
+    weights_path = './checkpoint/best_model_2919.pth'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     dataset_name = test_low.split('/')[1]
@@ -101,7 +98,7 @@ def main():
     _, test_loader = create_dataloaders(None, None, test_low, test_high, crop_size=None, batch_size=1)
     print(f'Test loader: {len(test_loader)}')
 
-    model = LYT().to(device)
+    model = DuLL().to(device)
     model.load_state_dict(torch.load(weights_path, map_location=device)['model_state_dict'])
     print(f'Model loaded from {weights_path}')
 

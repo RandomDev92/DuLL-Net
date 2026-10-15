@@ -81,10 +81,10 @@ def main():
     import torch.optim as optim
 
     # Hyperparameters
-    train_low = '/content/data/LOLdataset/our485/low'
-    train_high = '/content/data/LOLdataset/our485/high'
-    test_low = '/content/data/LOLdataset/eval15/low'
-    test_high = '/content/data/LOLdataset/eval15/high'
+    train_low = './dataset/LOLdataset/our485/low'
+    train_high = './dataset/LOLdataset/our485/high'
+    test_low = './dataset/LOLdataset/eval15/low'
+    test_high = './dataset/LOLdataset/eval15/high'
     learning_rate = 4e-4
     num_epochs = 1500
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -95,7 +95,7 @@ def main():
     print(f'Train loader: {len(train_loader)}; Test loader: {len(test_loader)}')
 
 
-    model = DULL().to(device)
+    model = DuLL().to(device)
 
 
     # Initialize optimizer to only update fusion_module parameters
@@ -110,7 +110,7 @@ def main():
     best_psnr = 0.0 # Initialize best_psnr
 
     if use_checkpoint:
-        checkpoint_path = '/content/drive/MyDrive/Checkpoints/best_model_lolv1_2636.pth'
+        checkpoint_path = './checkpoints/best_model.pth'
         try:
             checkpoint = torch.load(checkpoint_path, map_location=device)
             # Check if the checkpoint is in the new dictionary format (with 'model_state_dict' key)
@@ -171,7 +171,7 @@ def main():
                 'epoch': epoch,
                 'train_loss_at_save': train_loss, # Save the training loss at this epoch
                 'best_psnr': best_psnr
-            }, '/content/drive/MyDrive/Checkpoints/best_model_lolv1.pth')
+            }, './checkpoints/best_model.pth')
             print(f'Saving model with PSNR: {best_psnr:.6f}')
 
 if __name__ == '__main__':
